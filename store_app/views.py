@@ -437,8 +437,18 @@ def adminneworders(request):
     return render(request, "adminneworders.html", context)
 
 def adminpastorders(request):
+    if "user_id" not in request.session:
+        return redirect ('/login')
+    userid = request.session["user_id"]
+    user = User.objects.get(id=userid)
+    if user.level != 3:
 
-    return render(request, "adminpastorders.html")
+        return redirect('/dashboard')
+    context ={
+        "orders":Order.objects.all(),
+    }
+
+    return render(request, "adminpastorders.html", context)
 
 def adminvieworder(request, id):
     if "user_id" not in request.session:
@@ -458,6 +468,21 @@ def adminvieworder(request, id):
     return render(request, "adminvieworder.html", context)
 
 def updatetracking(request):
+    if "user_id" not in request.session:
+        return redirect ('/login')
+    userid = request.session["user_id"]
+    user = User.objects.get(id=userid)
+    if user.level != 3:
+
+        return redirect('/dashboard')
+    if request.method == "POST":
+        tracking = request.POST['tracking']
+        oid = request.POST['oid']
+        order = Order.objects.get(id=oid)
+        order.tracking = tracking
+        order.save()
+
+        return redirect(f'/admin/order/{oid}')
 
     return redirect('/admin')
 

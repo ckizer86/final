@@ -70,17 +70,33 @@
                             </tr>
                         </tbody>
                     </table>
+                    {% if order.tracking == "" %}
                     <form action="/updatetracking" method="post">
+                        {% csrf_token %}
                         <div class="form-row">
                             <div class="col">
-                                <input type="text" class="form-control" placeholder="Enter Tracking #">
-                                <input type="hidden" value="{{order.id}}">
+                                <input type="text" class="form-control" name="tracking" placeholder="Enter Tracking #">
+                                <input type="hidden" name="oid" value="{{order.id}}">
                             </div>
                             <div class="col">
                                 <button type="submit" class="btn btn-primary">Submit</button>
                             </div>
                         </div>
                     </form>
+                    {% else %}
+                    <form action="/updatetracking" method="post">
+                        {% csrf_token %}
+                        <div class="form-row">
+                            <div class="col">
+                                <input type="text" class="form-control" name="tracking" value="{{order.tracking}}">
+                                <input type="hidden" name="oid" value="{{order.id}}">
+                            </div>
+                            <div class="col">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                    {% endif %}
                 </div>
 
             </div>
