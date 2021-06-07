@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ecommerce Project</title>
+    {% include 'headerimports.html' %}
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 navbartop">
+                {% include 'navbar.html' %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2 sidebar">
+                {% include 'adminsidebar.html' %}
+            </div>
+            <div class="col-9 main">
+                <h1 class="store-header">Order Order_ID</h1>
+                <div class="row">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Picture</th>
+                                <th scope="col">Product Name</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">pic</th>
+                                <td>Product Name</td>
+                                <td>1</td>
+                                <td>9.99</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">pic</th>
+                                <td>Product Name</td>
+                                <td>1</td>
+                                <td>9.99</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">pic</th>
+                                <td>Product Name</td>
+                                <td>1</td>
+                                <td>9.99</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                    <form action="/updatetracking" method="post">
+                        <div class="form-row">
+                            <div class="col">
+                                <input type="text" class="form-control" placeholder="Enter Tracking #">
+                                <input type="hidden" value="{{order.id}}">
+                            </div>
+                            <div class="col">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
