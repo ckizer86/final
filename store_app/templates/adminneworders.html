@@ -23,9 +23,8 @@
             <div class="col-9 main">
                 <h1 class="store-header">New Orders</h1>
                 <div class="list-group dashboard">
-                    <a href="#" class="list-group-item list-group-item-action">Order_ID</a>
-                    <a href="#" class="list-group-item list-group-item-action">Order_ID</a>
-                    <a href="#" class="list-group-item list-group-item-action">Order_ID</a>
+                    {% for order in orders %} {% if order.tracking == "" %}
+                    <a href="/admin/order/{{order.id}}" class="list-group-item list-group-item-action">Order: {{order.id}}</a> {% endif %}{% endfor %}
                 </div>
 
             </div>

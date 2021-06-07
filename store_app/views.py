@@ -349,8 +349,17 @@ def accountupdate(request):
     return redirect('/')
 
 def recentorders(request):
+    if "user_id" not in request.session:
+        return redirect ('/login')
 
-    return render(request, "recentorders.html")
+    userid = request.session["user_id"]
+    user = User.objects.get(id=userid)
+    userorders = user.userorders.all()
+    context={
+        "userorders": userorders,
+    }
+
+    return render(request, "recentorders.html", context)
 
 def submitorder(request):
     if "user_id" not in request.session:
@@ -414,16 +423,39 @@ def admindash(request):
     return render(request, "admindashboard.html")
 
 def adminneworders(request):
+    if "user_id" not in request.session:
+        return redirect ('/login')
+    userid = request.session["user_id"]
+    user = User.objects.get(id=userid)
+    if user.level != 3:
 
-    return render(request, "adminneworders.html")
+        return redirect('/dashboard')
+    context ={
+        "orders":Order.objects.all(),
+    }
+
+    return render(request, "adminneworders.html", context)
 
 def adminpastorders(request):
 
     return render(request, "adminpastorders.html")
 
 def adminvieworder(request, id):
+    if "user_id" not in request.session:
+        return redirect ('/login')
+    userid = request.session["user_id"]
+    user = User.objects.get(id=userid)
+    if user.level != 3:
 
-    return render(request, "adminvieworder.html")
+        return redirect('/dashboard')
+    order = Order.objects.get(id=id)
+    product_dict = ast.literal_eval(order.product)
+    context = {
+        "order": order,
+        "productlist": product_dict,
+    }
+
+    return render(request, "adminvieworder.html", context)
 
 def updatetracking(request):
 
