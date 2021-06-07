@@ -159,8 +159,14 @@ def category(request, id):
 def product(request, id):
     productid = id
     productinfo = Product.objects.get(id=productid)
+    if "user_id" not in request.session:
+        context = {
+        "product": productinfo,
+        "all_categories": Category.objects.all(),
+    }
+        return render(request, "product.html", context)
     userid = request.session["user_id"]
-    user = User.objects.get(id=userid)
+    user = User.objects.get(id=userid) 
     context = {
         "product": productinfo,
         "all_categories": Category.objects.all(),
