@@ -15,6 +15,7 @@ urlpatterns = [
     path('add_cart', views.addcart),
     path('cart', views.cart),
     path('removecart/<int:id>', views.removecart),
+    path('submitorder', views.submitorder),
     path('config/', views.stripe_config),
     path('create-checkout-session/', views.create_checkout_session),
     path('success/', views.SuccessView),

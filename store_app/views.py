@@ -12,6 +12,7 @@ import bcrypt
 from time import gmtime, localtime, strftime
 from datetime import date, datetime
 from .models import *
+import ast
 
 # payments/views.py
 
@@ -228,16 +229,21 @@ def removecart(request,id):
 def cart(request):
     if "user_id" not in request.session:
         return redirect ('/login')
-    if not "total" in request.session:
-        
-        request.session["total"] = 0
+    
     userid = request.session["user_id"]
     user = User.objects.get(id=userid)
-    total = user.total
+    subtotal = user.total
+    tax = float(subtotal * .0825)
+    shipping = float(5.00)
+    total = float(subtotal + tax + shipping)
 
     context = {
         "all_categories": Category.objects.all(),
         "cart_products": user.usecart.all(),
+        "user": user,
+        "subtotal": subtotal,
+        "shipping": shipping,
+        "tax": tax,
         "total": total,
     }
 
@@ -346,9 +352,55 @@ def recentorders(request):
 
     return render(request, "recentorders.html")
 
-def vieworder(request, id):
+def submitorder(request):
+    if "user_id" not in request.session:
+        return redirect ('/login')
+    if request.method == "POST":
+        userid = request.session["user_id"]
+        user = User.objects.get(id=userid)
+        
+        subtotal = ast.literal_eval(request.POST['subtotal'])
+        tax = ast.literal_eval(request.POST['tax'])
+        shipping = ast.literal_eval(request.POST['shipping'])
+        usercart = user.usecart.all()
+        productlist = {"product":[]}
+        total = float(subtotal + tax + shipping)
 
-    return render(request, "vieworder.html")
+        for product in usercart:
+            rid = product.id
+            productid = Cart.objects.get(id=rid)
+            pid = productid.pid
+            orderproduct = Product.objects.get(id=pid)
+            pamount = str("{:.2f}".format(orderproduct.amount))
+            prodid = str(orderproduct.id)
+            productlist["product"].append('Product ID: ' + prodid + ' - ' + orderproduct.name + " : " + pamount)
+            destroyitem = Cart.objects.get(id=rid)
+            destroyitem.delete()
+        Order.objects.create(product=productlist, user=user, subtotal=subtotal, tax=tax, total=total, shipping=shipping)
+        user.total = 0
+        user.save()
+
+        return redirect('/dashboard')
+
+    return redirect('/')
+
+def vieworder(request, id):
+    if "user_id" not in request.session:
+        return redirect ('/login')
+    userid = request.session["user_id"]
+    user = User.objects.get(id=userid)
+    
+    for order in user.userorders.all():
+        if order.id == id:
+            order = Order.objects.get(id=id)
+            product_dict = ast.literal_eval(order.product)
+            context = {
+                "order":order,
+                "productlist": product_dict,
+            }
+            return render(request, "vieworder.html", context)
+
+    return redirect('/dashboard')
 
 def admindash(request):
     if "user_id" not in request.session:

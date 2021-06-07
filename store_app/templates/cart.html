@@ -49,20 +49,36 @@
                                 <td><a class="btn btn-danger" role="button" href="/removecart/{{product.pid}}">Remove</a></td>
                             </tr>
                             {% endfor %}
+
                             <tr>
                                 <td></td>
                                 <td></td>
                                 <td></td>
                                 <td>
                                     <div>
+                                        <p>Subtotal: {{subtotal|floatformat:2}}</p>
+                                    </div>
+                                    <div>
+                                        <p>Tax: {{tax|floatformat:2}}</p>
+                                    </div>
+                                    <div>
+                                        <p>Shipping: {{shipping|floatformat:2}}</p>
+                                    </div>
+                                    <div>
                                         <p>Total: {{total|floatformat:2}}</p>
                                     </div>
+                                    <form action="/submitorder" method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="subtotal" value="{{subtotal|floatformat:2}}">
+                                        <input type="hidden" name="tax" value="{{tax|floatformat:2}}">
+                                        <input type="hidden" name="shipping" value="{{shipping|floatformat:2}}">
+                                        <input type="hidden" name="usercart" value="{{cart_products}}">
+                                        <button class="btn btn-primary" type="submit">Place Order</button>
+                                    </form>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-
-                    <button class="button is-primary" id="submitBtn">Purchase!</button>
                 </div>
             </div>
         </div>

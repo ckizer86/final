@@ -17,13 +17,13 @@ class User(models.Model):
     city = models.CharField(max_length=255)
     state = models.CharField(max_length=255)
     zip = models.IntegerField(max_length=5)
-    total = models.IntegerField(null=True, default=0)
+    total = models.FloatField(null=True, default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     #useraddress
     #userorders
     #userlike
-    #usercart
+    #usecart
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
@@ -46,10 +46,13 @@ class Category(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class Order(models.Model):
-    product = models.ForeignKey(Product, related_name="orders", on_delete = models.CASCADE)
+    product = models.TextField()
     user = models.ForeignKey(User, related_name="userorders", on_delete = models.CASCADE)
     tracking = models.CharField(max_length=255, default="")
-    total = models.IntegerField(max_length=25)
+    subtotal = models.FloatField(default=0)
+    tax = models.FloatField(default=0)
+    total = models.FloatField(default=0)
+    shipping = models.FloatField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     

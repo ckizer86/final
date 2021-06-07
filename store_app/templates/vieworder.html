@@ -26,41 +26,43 @@
                 </ul>
             </div>
             <div class="col-9 main">
-                <h1 class="store-header">Order_ID</h1>
+                <h1 class="store-header">Order ID: {{order.id}}</h1>
                 <div class="row">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">Picture</th>
-                                <th scope="col">Product Name</th>
-                                <th scope="col">Quantity</th>
-                                <th scope="col">Amount</th>
-                                <th scope="col">Action</th>
+                                <th scope="col">Product</th>
+
                             </tr>
                         </thead>
                         <tbody>
+
+
                             <tr>
-                                <th scope="row">pic</th>
-                                <td>Product Name</td>
-                                <td>1</td>
-                                <td>9.99</td>
-                                <td>Action</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">pic</th>
-                                <td>Product Name</td>
-                                <td>1</td>
-                                <td>9.99</td>
-                                <td>Action</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">pic</th>
-                                <td>Product Name</td>
-                                <td>1</td>
-                                <td>9.99</td>
-                                <td>Action</td>
+                                <td>
+                                    {% for value in productlist.values %} {%for item in value %}
+                                    <div>{{item}}</div>
+                                    {% endfor %} {% endfor %}
+                                </td>
                             </tr>
 
+                            <tr>
+
+                                <td>
+                                    <div>
+                                        <p>Subtotal: {{order.subtotal|floatformat:2}}</p>
+                                    </div>
+                                    <div>
+                                        <p>Tax: {{order.tax|floatformat:2}}</p>
+                                    </div>
+                                    <div>
+                                        <p>Shipping: {{order.shipping|floatformat:2}}</p>
+                                    </div>
+                                    <div>
+                                        <p>Total: {{order.total|floatformat:2}}</p>
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     <button class="btn btn-primary">Track Order</button>
