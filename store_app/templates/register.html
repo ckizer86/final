@@ -18,7 +18,14 @@
         </div>
         <div class="row">
             <div class="col-6 loginform">
+
                 <h2>Register</h2>
+                {% if messages %}
+                <div class="alert alert-primary m-0" role="alert">
+                    {% for message in messages %} {{message}}
+                    <br> {% endfor %}
+                </div>
+                {% endif %}
                 <form action="/registeruser" method="post">
                     {% csrf_token %}
                     <div class="form-group">

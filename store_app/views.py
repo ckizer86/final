@@ -108,15 +108,22 @@ def login_page(request):
 
 def login(request):
     if request.method == "POST":
+        errors = User.objects.loginvalidation(request.POST)
+        if errors:
+            for error in errors.values():
+                messages.error(request,error)
+            return redirect('/login')
         email = request.POST['email']
         
         logged_user = User.objects.filter(email=email)
-        if logged_user:
-            logged_user = logged_user[0]
-            if bcrypt.checkpw(request.POST['pw'].encode(), logged_user.password.encode()):
-                request.session["user_id"] = logged_user.id
-                request.session["username"] = f"{logged_user.first_name} {logged_user.last_name}"
-                return redirect('/dashboard')
+        logged_user = logged_user[0]
+        if bcrypt.checkpw(request.POST['pw'].encode(), logged_user.password.encode()):
+            request.session["user_id"] = logged_user.id
+            request.session["username"] = f"{logged_user.first_name} {logged_user.last_name}"
+            return redirect('/dashboard')
+        else:
+            messages.error(request, "Invalid password")
+            return redirect('/login')
 
 
     
@@ -128,6 +135,11 @@ def register_page(request):
 
 def register(request):
     if request.method == "POST":
+        errors = User.objects.registervalidation(request.POST)
+        if errors:
+            for error in errors.values():
+                messages.error(request,error)
+            return redirect('/register')
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
         email = request.POST['email']
