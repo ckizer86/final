@@ -72,6 +72,35 @@ class Validators(models.Manager):
 
         return errors
 
+    def catvalidation(self, postData):
+        errors={}
+        category = postData['name']
+        if category == "":
+            errors['cat'] = "You can not create an unnamed cateogry"
+
+        return errors
+
+    def createproduct(self, postData):
+        errors={}
+        name = postData['name']
+        img = postData['pic']
+        stock = postData['stock']
+        amount = postData['amt']
+
+        if name == "":
+            errors['name'] = "Product name can not be empty."
+        for pname in Product.objects.all():
+            if name == pname.name:
+                errors['unique'] = "Product name already exists."
+        if img == "":
+            errors['img'] = "You must enter an image link."
+        if stock == "":
+            errors['stock'] = "You must enter a stock amount."
+        if amount == "":
+            errors['amount'] = "You must enter a price for the product."
+
+        return errors
+
 class User(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
@@ -103,6 +132,7 @@ class Product(models.Model):
     cart = models.ManyToManyField(User, related_name="renamedcart")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    objects = Validators()
     #categories
     #orders
     #productincart

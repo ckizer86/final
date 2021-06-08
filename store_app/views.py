@@ -189,7 +189,18 @@ def product(request, id):
     return render(request, "product.html", context)
 
 def addcat(request):
+    if "user_id" not in request.session:
+        return redirect ('/login')
+    userid = request.session["user_id"]
+    user = User.objects.get(id=userid)
+    if user.level != 3:
+        return redirect('/dashboard')
     if request.method == "POST":
+        errors = User.objects.catvalidation(request.POST)
+        if errors:
+            for error in errors.values():
+                messages.error(request,error)
+            return redirect('/admin/add_product')
         name = request.POST['name']
         Category.objects.create(name=name)
         return redirect('/admin/add_product')
@@ -535,7 +546,19 @@ def addprod(request):
     return render(request, "addproduct.html", context)
 
 def addingprod(request):
+    if "user_id" not in request.session:
+        return redirect ('/login')
+    userid = request.session["user_id"]
+    user = User.objects.get(id=userid)
+    if user.level != 3:
+
+        return redirect('/dashboard')
     if request.method == "POST":
+        errors = Product.objects.createproduct(request.POST)
+        if errors:
+            for error in errors.values():
+                messages.error(request,error)
+            return redirect('/admin/add_product')
         name = request.POST['name']
         desc = request.POST['desc']
         amount = request.POST['amt']

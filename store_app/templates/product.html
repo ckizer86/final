@@ -46,6 +46,9 @@
 
 
                             <dd class="col-sm-9">
+                                {% if product.stock == 0 %}
+                                <p>Currently out of stock</p>
+                                {% else %}
                                 <form action="/add_cart" method="post">
                                     {% csrf_token %}
                                     <div class="form-row">
@@ -69,11 +72,12 @@
                                             <input type="hidden" name="pid" value="{{product.id}}">
                                         </div>
                                         <div class="form-group col-md-2">
+
                                             <button class="btn btn-primary" type="submit">Add</button>
                                         </div>
                                     </div>
                                 </form>
-
+                                {% endif %}
                                 <p>Likes: {{product.likes.count}}</p>
 
                                 {% if likes %}
